@@ -33,8 +33,8 @@
             background-color: rgba(255, 255, 255, 0.8);
             font-size: 10px;
             text-align: center;
-            width: 100px;
-            height: 100px;
+            width: 15vw;
+            height: 15vw;
             display: grid;
             grid-template-columns: auto auto auto;
             grid-template-rows: auto auto auto;
@@ -43,8 +43,8 @@
         .smallCard {
             background-color: #333;
             color: #ccc;
-            width: 100px;
-            height: 100px;
+            width: 15vw;
+            height: 15vw;
             display: grid;
             grid-template-columns: auto auto auto;
             grid-template-rows: auto auto auto;
@@ -68,7 +68,7 @@
             if (h < w) w = h;
             cSize = w / 6;
             for (i = 1; i <= 9; i++) {
-                document.getElementById("basePlate").innerHTML += "<div data-inplay='true' id='base" + i + "' onclick='selectBase(" + i + ");' style='height: " + cSize + "px; width: " + cSize + "px;' class='grid-item'></div>";
+                document.getElementById("basePlate").innerHTML += "<div data-inplay='true' id='base" + i + "' onclick='selectBase(" + i + ");' class='grid-item'></div>";
             }
             for (i = 1; i <= 5; i++) {
                 var div = document.createElement('div');
@@ -224,7 +224,7 @@
     <div style="position: fixed; top:0px; height:50px; left: 0px; right:0px; background-color: #333;"></div>
     <div id="basePlate" class="container"></div>
     <div id="bottom"
-        style="background-color: #999; height:120px; position:fixed; bottom: 0px; left: 0px; right:0px; display: grid; grid-template-columns: auto auto auto auto auto; column-gap: 20px; justify-content: center; align-content: center;">
+        style="background-color: #999; height:20vw; position:fixed; bottom: 0px; left: 0px; right:0px; display: grid; grid-template-columns: auto auto auto auto auto; column-gap: 20px; justify-content: center; align-content: center;">
     </div>
 </body>
 
