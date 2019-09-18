@@ -9,6 +9,7 @@
         }
         html {
             box-sizing: border-box;
+            font-size: 3vw;
         }
 
         .container {
@@ -79,10 +80,10 @@
                 div.east = Math.ceil(Math.random() * 10);
                 div.south = Math.ceil(Math.random() * 10);
                 div.onclick = function () { selectCard(event) };
-                div.innerHTML += "<div style='grid-row:2; grid-column:1; font-size:14px; display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>"+toPrint(div.west)+"</div></div>";
-                div.innerHTML += "<div style='grid-row:1; grid-column:2; font-size:14px; display:flex;align-items:flex-start;justify-content:center;padding:5px;'>"+toPrint(div.north)+"</div>";
-                div.innerHTML += "<div style='grid-row:2; grid-column:3; font-size:14px; display:flex;align-items:center;justify-content:flex-end;padding:5px;'>"+toPrint(div.east)+"</div>";
-                div.innerHTML += "<div style='grid-row:3; grid-column:2; font-size:14px; display:flex;align-items:flex-end;justify-content:center;padding:5px;'>"+toPrint(div.south)+"</div>";
+                div.innerHTML += "<div style='grid-row:2; grid-column:1;  display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>"+toPrint(div.west)+"</div></div>";
+                div.innerHTML += "<div style='grid-row:1; grid-column:2;  display:flex;align-items:flex-start;justify-content:center;padding:5px;'>"+toPrint(div.north)+"</div>";
+                div.innerHTML += "<div style='grid-row:2; grid-column:3;  display:flex;align-items:center;justify-content:flex-end;padding:5px;'>"+toPrint(div.east)+"</div>";
+                div.innerHTML += "<div style='grid-row:3; grid-column:2;  display:flex;align-items:flex-end;justify-content:center;padding:5px;'>"+toPrint(div.south)+"</div>";
                 div.innerHTML += "<div style='grid-row:2; grid-column:2; display:flex;align-items:center;justify-content:center;'><div style='border-radius:50%; width: 20px; height: 20px; background-color: var(--player1);'></div></div>";
                 document.getElementById("bottom").appendChild(div);
             }
@@ -145,10 +146,10 @@
         function playCard(position, cardObject, player){
             console.log("Position: "+position+" - "+JSON.stringify(cardObject));
             $("base"+position).setAttribute("data-inplay", "false");
-            $("base"+position).innerHTML += "<div style='grid-row:2; grid-column:1; font-size:14px; display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>"+toPrint(cardObject.west)+"</div></div>";
-            $("base"+position).innerHTML += "<div style='grid-row:1; grid-column:2; font-size:14px; display:flex;align-items:flex-start;justify-content:center;padding:5px;'>"+toPrint(cardObject.north)+"</div>";
-            $("base"+position).innerHTML += "<div style='grid-row:2; grid-column:3; font-size:14px; display:flex;align-items:center;justify-content:flex-end;padding:5px;'>"+toPrint(cardObject.east)+"</div>";
-            $("base"+position).innerHTML += "<div style='grid-row:3; grid-column:2; font-size:14px; display:flex;align-items:flex-end;justify-content:center;padding:5px;'>"+toPrint(cardObject.south)+"</div>";
+            $("base"+position).innerHTML += "<div style='grid-row:2; grid-column:1;  display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>"+toPrint(cardObject.west)+"</div></div>";
+            $("base"+position).innerHTML += "<div style='grid-row:1; grid-column:2;  display:flex;align-items:flex-start;justify-content:center;padding:5px;'>"+toPrint(cardObject.north)+"</div>";
+            $("base"+position).innerHTML += "<div style='grid-row:2; grid-column:3;  display:flex;align-items:center;justify-content:flex-end;padding:5px;'>"+toPrint(cardObject.east)+"</div>";
+            $("base"+position).innerHTML += "<div style='grid-row:3; grid-column:2;  display:flex;align-items:flex-end;justify-content:center;padding:5px;'>"+toPrint(cardObject.south)+"</div>";
             $("base"+position).west = cardObject.west;
             $("base"+position).north = cardObject.north;
             $("base"+position).east = cardObject.east;
