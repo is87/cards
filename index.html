@@ -2,11 +2,13 @@
 <html>
 
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        :root{
-            --player1:#708D81;
-            --player2:#BF0603;
+        :root {
+            --player1: #708D81;
+            --player2: #BF0603;
         }
+
         html {
             box-sizing: border-box;
             font-size: 3vw;
@@ -39,7 +41,7 @@
             grid-template-columns: auto auto auto;
             grid-template-rows: auto auto auto;
         }
-        
+
         .smallCard {
             background-color: #333;
             color: #ccc;
@@ -50,16 +52,23 @@
             grid-template-rows: auto auto auto;
             position: relative;
         }
-        .base{
+
+        .base {
             display: grid;
             grid-template-columns: auto auto auto;
             grid-template-rows: auto auto auto;
         }
     </style>
     <script>
+        var playerName = "Player 1";
         var playMode = "select";
         var selectedCard = null;
-        function $(id){
+
+        $(document).ready(function () {
+            init();
+        });
+
+        function x(id) {
             return document.getElementById(id);
         }
         function init() {
@@ -79,19 +88,20 @@
                 div.east = Math.ceil(Math.random() * 10);
                 div.south = Math.ceil(Math.random() * 10);
                 div.onclick = function () { selectCard(event) };
-                div.innerHTML += "<div style='grid-row:2; grid-column:1;  display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>"+toPrint(div.west)+"</div></div>";
-                div.innerHTML += "<div style='grid-row:1; grid-column:2;  display:flex;align-items:flex-start;justify-content:center;padding:5px;'>"+toPrint(div.north)+"</div>";
-                div.innerHTML += "<div style='grid-row:2; grid-column:3;  display:flex;align-items:center;justify-content:flex-end;padding:5px;'>"+toPrint(div.east)+"</div>";
-                div.innerHTML += "<div style='grid-row:3; grid-column:2;  display:flex;align-items:flex-end;justify-content:center;padding:5px;'>"+toPrint(div.south)+"</div>";
+                div.innerHTML += "<div style='grid-row:2; grid-column:1;  display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>" + toPrint(div.west) + "</div></div>";
+                div.innerHTML += "<div style='grid-row:1; grid-column:2;  display:flex;align-items:flex-start;justify-content:center;padding:5px;'>" + toPrint(div.north) + "</div>";
+                div.innerHTML += "<div style='grid-row:2; grid-column:3;  display:flex;align-items:center;justify-content:flex-end;padding:5px;'>" + toPrint(div.east) + "</div>";
+                div.innerHTML += "<div style='grid-row:3; grid-column:2;  display:flex;align-items:flex-end;justify-content:center;padding:5px;'>" + toPrint(div.south) + "</div>";
                 div.innerHTML += "<div style='grid-row:2; grid-column:2; display:flex;align-items:center;justify-content:center;'><div style='border-radius:50%; width: 20px; height: 20px; background-color: var(--player1);'></div></div>";
                 document.getElementById("bottom").appendChild(div);
             }
+            listen();
         }
 
-        function toPrint(value){
-            if(value<10){
+        function toPrint(value) {
+            if (value < 10) {
                 return value;
-            }else{
+            } else {
                 return "A";
             }
         }
@@ -101,7 +111,7 @@
                 id = e.target.id;
                 if (id == "") id = e.target.parentNode.id
                 for (i = 1; i <= 5; i++) {
-                    if($("c"+i) != null)document.getElementById("c" + i).style.border = "0px solid #000";
+                    if (x("c" + i) != null) document.getElementById("c" + i).style.border = "0px solid #000";
                 }
                 if (selectedCard != id) {
                     document.getElementById(id).style.border = "1px solid #000";
@@ -113,115 +123,141 @@
                 }
             }
         }
-        function getCol(a){
-            return (a-1)%3+1;
+        function getCol(a) {
+            return (a - 1) % 3 + 1;
         }
-        function getRow(a){
-            return Math.ceil(a/3);
+        function getRow(a) {
+            return Math.ceil(a / 3);
         }
         function selectBase(base) {
-            if (playMode == "place" && $("base"+base).getAttribute("data-inplay") == "true" && selectedCard != null) {
+            if (playMode == "place" && x("base" + base).getAttribute("data-inplay") == "true" && selectedCard != null) {
                 console.log("Put card " + selectedCard + " on base " + base);
                 for (i = 1; i <= 5; i++) {
-                    if($("c"+i) != null)document.getElementById("c" + i).style.border = "0px solid #000";
+                    if (x("c" + i) != null) document.getElementById("c" + i).style.border = "0px solid #000";
                 }
-                
-                //$(selectedCard).style.display = "none";
-                
-                
+
+                //x(selectedCard).style.display = "none";
+
+
                 var cardObject = new Object();
-                cardObject.west = $(selectedCard).west;
-                cardObject.north = $(selectedCard).north;
-                cardObject.east = $(selectedCard).east;
-                cardObject.south = $(selectedCard).south;
-                $(selectedCard).remove();
+                cardObject.position = base;
+                cardObject.west = x(selectedCard).west;
+                cardObject.north = x(selectedCard).north;
+                cardObject.east = x(selectedCard).east;
+                cardObject.south = x(selectedCard).south;
+                x(selectedCard).remove();
                 selectedCard = null;
                 playCard(base, cardObject, 1);
+                sendData(cardObject);
                 //setPlayMode("wait");
-                
+
             }
         }
 
-        function playCard(position, cardObject, player){
-            console.log("Position: "+position+" - "+JSON.stringify(cardObject));
-            $("base"+position).setAttribute("data-inplay", "false");
-            $("base"+position).innerHTML += "<div style='grid-row:2; grid-column:1;  display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>"+toPrint(cardObject.west)+"</div></div>";
-            $("base"+position).innerHTML += "<div style='grid-row:1; grid-column:2;  display:flex;align-items:flex-start;justify-content:center;padding:5px;'>"+toPrint(cardObject.north)+"</div>";
-            $("base"+position).innerHTML += "<div style='grid-row:2; grid-column:3;  display:flex;align-items:center;justify-content:flex-end;padding:5px;'>"+toPrint(cardObject.east)+"</div>";
-            $("base"+position).innerHTML += "<div style='grid-row:3; grid-column:2;  display:flex;align-items:flex-end;justify-content:center;padding:5px;'>"+toPrint(cardObject.south)+"</div>";
-            $("base"+position).west = cardObject.west;
-            $("base"+position).north = cardObject.north;
-            $("base"+position).east = cardObject.east;
-            $("base"+position).south = cardObject.south;
-            $("base"+position).playedBy = player;
-            $("base"+position).cardColor = player; 
-            if(player==1)colorString = "var(--player1)";
-            if(player==2)colorString = "var(--player2)";
-            $("base"+position).innerHTML += "<div style='grid-row:2; grid-column:2; display:flex;align-items:center;justify-content:center;'><div id='colorCircle' style='border-radius:50%; width: 20px; height: 20px; background-color: "+colorString+";'></div></div>";
+        function playCard(position, cardObject, player) {
+            console.log("Position: " + position + " - " + JSON.stringify(cardObject));
+            x("base" + position).setAttribute("data-inplay", "false");
+            x("base" + position).innerHTML += "<div style='grid-row:2; grid-column:1;  display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>" + toPrint(cardObject.west) + "</div></div>";
+            x("base" + position).innerHTML += "<div style='grid-row:1; grid-column:2;  display:flex;align-items:flex-start;justify-content:center;padding:5px;'>" + toPrint(cardObject.north) + "</div>";
+            x("base" + position).innerHTML += "<div style='grid-row:2; grid-column:3;  display:flex;align-items:center;justify-content:flex-end;padding:5px;'>" + toPrint(cardObject.east) + "</div>";
+            x("base" + position).innerHTML += "<div style='grid-row:3; grid-column:2;  display:flex;align-items:flex-end;justify-content:center;padding:5px;'>" + toPrint(cardObject.south) + "</div>";
+            x("base" + position).west = cardObject.west;
+            x("base" + position).north = cardObject.north;
+            x("base" + position).east = cardObject.east;
+            x("base" + position).south = cardObject.south;
+            x("base" + position).playedBy = player;
+            x("base" + position).cardColor = player;
+            if (player == 1) colorString = "var(--player1)";
+            if (player == 2) colorString = "var(--player2)";
+            x("base" + position).innerHTML += "<div style='grid-row:2; grid-column:2; display:flex;align-items:center;justify-content:center;'><div id='colorCircle' style='border-radius:50%; width: 20px; height: 20px; background-color: " + colorString + ";'></div></div>";
             checkSurroundings(position);
         }
 
-        function checkSurroundings(position){
-            mittKort = $("base"+position);
-            console.log("west: "+mittKort.west+" north: "+mittKort.north+" east: "+mittKort.east+" south: "+mittKort.south);
-            for(i=1;i<=9;i++){
-                kort = $("base"+i);
-                if(i!=position && kort.getAttribute("data-inplay") == "false"){
-                    if(getRow(i) == getRow(position) && getCol(i) == getCol(position)+1){
-                        console.log("east: "+i);//find east
-                        if(mittKort.east > kort.west)tryFlipping(kort, mittKort, "east");
+        function checkSurroundings(position) {
+            mittKort = x("base" + position);
+            console.log("west: " + mittKort.west + " north: " + mittKort.north + " east: " + mittKort.east + " south: " + mittKort.south);
+            for (i = 1; i <= 9; i++) {
+                kort = x("base" + i);
+                if (i != position && kort.getAttribute("data-inplay") == "false") {
+                    if (getRow(i) == getRow(position) && getCol(i) == getCol(position) + 1) {
+                        console.log("east: " + i);//find east
+                        if (mittKort.east > kort.west) tryFlipping(kort, mittKort, "east");
                     }
-                    if(getRow(i) == getRow(position) && getCol(i) == getCol(position)-1){
-                        console.log("west: "+i);direction="west";//find west
-                        if(mittKort.west > kort.east)tryFlipping(kort, mittKort, "west");
+                    if (getRow(i) == getRow(position) && getCol(i) == getCol(position) - 1) {
+                        console.log("west: " + i); direction = "west";//find west
+                        if (mittKort.west > kort.east) tryFlipping(kort, mittKort, "west");
                     }
-                    if(getRow(i) == getRow(position)+1 && getCol(i) == getCol(position)){
-                        console.log("south: "+i);direction="south";//find south
-                        if(mittKort.south > kort.north)tryFlipping(kort, mittKort, "south");
+                    if (getRow(i) == getRow(position) + 1 && getCol(i) == getCol(position)) {
+                        console.log("south: " + i); direction = "south";//find south
+                        if (mittKort.south > kort.north) tryFlipping(kort, mittKort, "south");
                     }
-                    if(getRow(i) == getRow(position)-1 && getCol(i) == getCol(position)){
-                        console.log("north: "+i);direction="";//find north
-                        if(mittKort.north > kort.south)tryFlipping(kort, mittKort, "north");
+                    if (getRow(i) == getRow(position) - 1 && getCol(i) == getCol(position)) {
+                        console.log("north: " + i); direction = "";//find north
+                        if (mittKort.north > kort.south) tryFlipping(kort, mittKort, "north");
                     }
                 }
             }
         }
 
-        function tryFlipping(card, byCard, direction){
-            if(card.cardColor != byCard.cardColor){
+        function tryFlipping(card, byCard, direction) {
+            if (card.cardColor != byCard.cardColor) {
                 card.cardColor = byCard.cardColor;
-                card.lastChild.firstChild.style.backgroundColor = "var(--player"+card.cardColor+")";
-                console.log("Flipping card to the "+direction);
+                card.lastChild.firstChild.style.backgroundColor = "var(--player" + card.cardColor + ")";
+                console.log("Flipping card to the " + direction);
             }
         }
 
-        function incomingPlay(position, cardObject){
+        function incomingPlay(position, cardObject) {
             playCard(position, cardObject, 2);
             setPlayMode("select");
         }
 
-        function playThis(position, a, b, c, d){
+        function playThis(position, a, b, c, d) {
             var cardObject = new Object();
-                cardObject.west = a;
-                cardObject.north = b;
-                cardObject.east = c;
-                cardObject.south = d;
+            cardObject.west = a;
+            cardObject.north = b;
+            cardObject.east = c;
+            cardObject.south = d;
             playCard(position, cardObject, 2);
             setPlayMode("select");
         }
 
-        function setPlayMode(mode){
+        function setPlayMode(mode) {
             playMode = mode;
             console.log(playMode);
-            if(playMode=="wait"){
-                
+            if (playMode == "wait") {
+
             }
+        }
+
+        function sendData(cardObject){
+            cardObject.player = playerName;
+            $.post("https://isak.pythonanywhere.com/cards/",
+                {
+                    action: "write",
+                    data: JSON.stringify(cardObject)
+                },
+                function (data, status) {
+                    console.log(data);
+                });
+        }
+
+        function listen() {
+            $.post("https://isak.pythonanywhere.com/cards/",
+                {
+                    action: "read",
+                },
+                function (data, status) {
+                    //data = JSON.parse(data);
+                    console.log(data);
+                    playThis(data.position, data.west, data.north, data.east, data.south);
+                });
         }
     </script>
 </head>
 
-<body onload="init();">
-    <div style="position: fixed; top:0px; height:50px; left: 0px; right:0px; background-color: #333;"></div>
+<body>
+    <div id="topBar" style="position: fixed; top:0px; height:50px; left: 0px; right:0px; background-color: #333; color: #ccc;"><input type="text" value="Player 1" onchange="playerName=this.value;" /></div>
     <div id="basePlate" class="container"></div>
     <div id="bottom"
         style="background-color: #999; height:20vw; position:fixed; bottom: 0px; left: 0px; right:0px; display: grid; grid-template-columns: auto auto auto auto auto; column-gap: 20px; justify-content: center; align-content: center;">
