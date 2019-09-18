@@ -95,7 +95,6 @@
                 div.innerHTML += "<div style='grid-row:2; grid-column:2; display:flex;align-items:center;justify-content:center;'><div style='border-radius:50%; width: 20px; height: 20px; background-color: var(--player1);'></div></div>";
                 document.getElementById("bottom").appendChild(div);
             }
-            listen();
         }
 
         function toPrint(value) {
@@ -250,14 +249,19 @@
                 function (data, status) {
                     //data = JSON.parse(data);
                     console.log(data);
-                    playThis(data.position, data.west, data.north, data.east, data.south);
+                    if(data.player!=playerName)playThis(data.position, data.west, data.north, data.east, data.south);
                 });
+        }
+
+        function setPlayerName(name){
+            playerName = name;
+            x("pName").innerText = name;
         }
     </script>
 </head>
 
 <body>
-    <div id="topBar" style="position: fixed; top:0px; height:50px; left: 0px; right:0px; background-color: #333; color: #ccc;"><input type="text" value="Player 1" onchange="playerName=this.value;" /></div>
+    <div id="topBar" style="position: fixed; top:0px; height:50px; left: 0px; right:0px; background-color: #333; color: #ccc;"><input type="text" value="Set name" onchange="setPlayerName(this.value);" /><span id="pName"></span><button onclick="listen();">Start listening</button></div>
     <div id="basePlate" class="container"></div>
     <div id="bottom"
         style="background-color: #999; height:20vw; position:fixed; bottom: 0px; left: 0px; right:0px; display: grid; grid-template-columns: auto auto auto auto auto; column-gap: 20px; justify-content: center; align-content: center;">
