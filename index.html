@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        :root{
+            --player1:#708D81;
+            --player2:#BF0603;
+        }
+        html {
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            grid-template-rows: auto auto auto;
+            position: fixed;
+            top: 50px;
+            bottom: 120px;
+            right: 0px;
+            left: 0px;
+            background-color: #ccc;
+            padding: 0;
+            margin: 0;
+            row-gap: 20px;
+            column-gap: 20px;
+            align-content: center;
+            justify-content: center;
+        }
+
+        .grid-item {
+            background-color: rgba(255, 255, 255, 0.8);
+            font-size: 10px;
+            text-align: center;
+            width: 100px;
+            height: 100px;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            grid-template-rows: auto auto auto;
+        }
+        
+        .smallCard {
+            background-color: #333;
+            color: #ccc;
+            width: 100px;
+            height: 100px;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            grid-template-rows: auto auto auto;
+            position: relative;
+        }
+        .base{
+            display: grid;
+            grid-template-columns: auto auto auto;
+            grid-template-rows: auto auto auto;
+        }
+    </style>
+    <script>
+        var playMode = "select";
+        var selectedCard = null;
+        function $(id){
+            return document.getElementById(id);
+        }
+        function init() {
+            w = window.innerWidth;
+            h = window.innerHeight;
+            if (h < w) w = h;
+            cSize = w / 6;
+            for (i = 1; i <= 9; i++) {
+                document.getElementById("basePlate").innerHTML += "<div data-inplay='true' id='base" + i + "' onclick='selectBase(" + i + ");' style='height: " + cSize + "px; width: " + cSize + "px;' class='grid-item'></div>";
+            }
+            for (i = 1; i <= 5; i++) {
+                var div = document.createElement('div');
+                div.className = "smallCard";
+                div.id = "c" + i;
+                div.west = Math.ceil(Math.random() * 10);
+                div.north = Math.ceil(Math.random() * 10);
+                div.east = Math.ceil(Math.random() * 10);
+                div.south = Math.ceil(Math.random() * 10);
+                div.onclick = function () { selectCard(event) };
+                div.innerHTML += "<div style='grid-row:2; grid-column:1; font-size:14px; display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>"+toPrint(div.west)+"</div></div>";
+                div.innerHTML += "<div style='grid-row:1; grid-column:2; font-size:14px; display:flex;align-items:flex-start;justify-content:center;padding:5px;'>"+toPrint(div.north)+"</div>";
+                div.innerHTML += "<div style='grid-row:2; grid-column:3; font-size:14px; display:flex;align-items:center;justify-content:flex-end;padding:5px;'>"+toPrint(div.east)+"</div>";
+                div.innerHTML += "<div style='grid-row:3; grid-column:2; font-size:14px; display:flex;align-items:flex-end;justify-content:center;padding:5px;'>"+toPrint(div.south)+"</div>";
+                div.innerHTML += "<div style='grid-row:2; grid-column:2; display:flex;align-items:center;justify-content:center;'><div style='border-radius:50%; width: 20px; height: 20px; background-color: var(--player1);'></div></div>";
+                document.getElementById("bottom").appendChild(div);
+            }
+        }
+
+        function toPrint(value){
+            if(value<10){
+                return value;
+            }else{
+                return "A";
+            }
+        }
+
+        function selectCard(e) {
+            if (playMode == "select" || playMode == "place") {
+                id = e.target.id;
+                if (id == "") id = e.target.parentNode.id
+                for (i = 1; i <= 5; i++) {
+                    if($("c"+i) != null)document.getElementById("c" + i).style.border = "0px solid #000";
+                }
+                if (selectedCard != id) {
+                    document.getElementById(id).style.border = "1px solid #000";
+                    selectedCard = id;
+                    setPlayMode("place");
+                } else {
+                    selectedCard = null;
+                    setPlayMode("select");
+                }
+            }
+        }
+        function getCol(a){
+            return (a-1)%3+1;
+        }
+        function getRow(a){
+            return Math.ceil(a/3);
+        }
+        function selectBase(base) {
+            if (playMode == "place" && $("base"+base).getAttribute("data-inplay") == "true" && selectedCard != null) {
+                console.log("Put card " + selectedCard + " on base " + base);
+                for (i = 1; i <= 5; i++) {
+                    if($("c"+i) != null)document.getElementById("c" + i).style.border = "0px solid #000";
+                }
+                
+                //$(selectedCard).style.display = "none";
+                
+                
+                var cardObject = new Object();
+                cardObject.west = $(selectedCard).west;
+                cardObject.north = $(selectedCard).north;
+                cardObject.east = $(selectedCard).east;
+                cardObject.south = $(selectedCard).south;
+                $(selectedCard).remove();
+                selectedCard = null;
+                playCard(base, cardObject, 1);
+                //setPlayMode("wait");
+                
+            }
+        }
+
+        function playCard(position, cardObject, player){
+            console.log("Position: "+position+" - "+JSON.stringify(cardObject));
+            $("base"+position).setAttribute("data-inplay", "false");
+            $("base"+position).innerHTML += "<div style='grid-row:2; grid-column:1; font-size:14px; display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>"+toPrint(cardObject.west)+"</div></div>";
+            $("base"+position).innerHTML += "<div style='grid-row:1; grid-column:2; font-size:14px; display:flex;align-items:flex-start;justify-content:center;padding:5px;'>"+toPrint(cardObject.north)+"</div>";
+            $("base"+position).innerHTML += "<div style='grid-row:2; grid-column:3; font-size:14px; display:flex;align-items:center;justify-content:flex-end;padding:5px;'>"+toPrint(cardObject.east)+"</div>";
+            $("base"+position).innerHTML += "<div style='grid-row:3; grid-column:2; font-size:14px; display:flex;align-items:flex-end;justify-content:center;padding:5px;'>"+toPrint(cardObject.south)+"</div>";
+            $("base"+position).west = cardObject.west;
+            $("base"+position).north = cardObject.north;
+            $("base"+position).east = cardObject.east;
+            $("base"+position).south = cardObject.south;
+            $("base"+position).playedBy = player;
+            $("base"+position).cardColor = player; 
+            if(player==1)colorString = "var(--player1)";
+            if(player==2)colorString = "var(--player2)";
+            $("base"+position).innerHTML += "<div style='grid-row:2; grid-column:2; display:flex;align-items:center;justify-content:center;'><div id='colorCircle' style='border-radius:50%; width: 20px; height: 20px; background-color: "+colorString+";'></div></div>";
+            checkSurroundings(position);
+        }
+
+        function checkSurroundings(position){
+            mittKort = $("base"+position);
+            console.log("west: "+mittKort.west+" north: "+mittKort.north+" east: "+mittKort.east+" south: "+mittKort.south);
+            for(i=1;i<=9;i++){
+                kort = $("base"+i);
+                if(i!=position && kort.getAttribute("data-inplay") == "false"){
+                    if(getRow(i) == getRow(position) && getCol(i) == getCol(position)+1){
+                        console.log("east: "+i);//find east
+                        if(mittKort.east > kort.west)tryFlipping(kort, mittKort, "east");
+                    }
+                    if(getRow(i) == getRow(position) && getCol(i) == getCol(position)-1){
+                        console.log("west: "+i);direction="west";//find west
+                        if(mittKort.west > kort.east)tryFlipping(kort, mittKort, "west");
+                    }
+                    if(getRow(i) == getRow(position)+1 && getCol(i) == getCol(position)){
+                        console.log("south: "+i);direction="south";//find south
+                        if(mittKort.south > kort.north)tryFlipping(kort, mittKort, "south");
+                    }
+                    if(getRow(i) == getRow(position)-1 && getCol(i) == getCol(position)){
+                        console.log("north: "+i);direction="";//find north
+                        if(mittKort.north > kort.south)tryFlipping(kort, mittKort, "north");
+                    }
+                }
+            }
+        }
+
+        function tryFlipping(card, byCard, direction){
+            if(card.cardColor != byCard.cardColor){
+                card.cardColor = byCard.cardColor;
+                card.lastChild.firstChild.style.backgroundColor = "var(--player"+card.cardColor+")";
+                console.log("Flipping card to the "+direction);
+            }
+        }
+
+        function incomingPlay(position, cardObject){
+            playCard(position, cardObject, 2);
+            setPlayMode("select");
+        }
+
+        function playThis(position, a, b, c, d){
+            var cardObject = new Object();
+                cardObject.west = a;
+                cardObject.north = b;
+                cardObject.east = c;
+                cardObject.south = d;
+            playCard(position, cardObject, 2);
+            setPlayMode("select");
+        }
+
+        function setPlayMode(mode){
+            playMode = mode;
+            console.log(playMode);
+            if(playMode=="wait"){
+                
+            }
+        }
+    </script>
+</head>
+
+<body onload="init();">
+    <div style="position: fixed; top:0px; height:50px; left: 0px; right:0px; background-color: #333;"></div>
+    <div id="basePlate" class="container"></div>
+    <div id="bottom"
+        style="background-color: #999; height:120px; position:fixed; bottom: 0px; left: 0px; right:0px; display: grid; grid-template-columns: auto auto auto auto auto; column-gap: 20px; justify-content: center; align-content: center;">
+    </div>
+</body>
+
+</html>
