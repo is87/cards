@@ -238,6 +238,7 @@
                 },
                 function (data, status) {
                     console.log(data);
+                    setTimeout(listen, 10000);
                 });
         }
 
@@ -249,7 +250,11 @@
                 function (data, status) {
                     //data = JSON.parse(data);
                     console.log(data);
-                    if(data.player!=playerName)playThis(data.position, data.west, data.north, data.east, data.south);
+                    if(data.player!=playerName){
+                        playThis(data.position, data.west, data.north, data.east, data.south);
+                    }else{
+                        setTimeout(listen, 10000);
+                    }
                 });
         }
 
