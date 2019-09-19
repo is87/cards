@@ -2,6 +2,7 @@
 <html>
 
 <head>
+        <link href="https://fonts.googleapis.com/css?family=Fredoka+One&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
         :root {
@@ -12,6 +13,7 @@
         html {
             box-sizing: border-box;
             font-size: 3vw;
+            font-family: 'Fredoka One', cursive;
         }
 
         .container {
@@ -336,11 +338,11 @@
     <div id="bottom" class="bottom"
         style="background-color: #999; position:fixed; bottom: 0px; left: 0px; right:0px; display: grid; grid-template-columns: auto auto auto auto auto; column-gap: 20px; justify-content: center; align-content: center;">
     </div>
-    <div id="modalStart" style="position: fixed; top:0; bottom:0;left:0;right:0; background-color:rgba(255, 255, 255, 0.3); display: flex;justify-content: center;align-items: center; "><div style="background-color: #333; color: #999; padding: 20px;">
+    <div id="modalStart" style="position: fixed; top:0; bottom:0;left:0;right:0; background-color:rgba(255, 255, 255, 0.3); display: flex;justify-content: center;align-items: center; "><div style="background-color: #333; color: #999; padding: 20px; border-radius: 1vw;">
         Welcome to Niner Card Online<br>
         Let's play a game...<br>
-        Name: <input type="text" id="formName" value="" /><br>
-        Board: <input type="text" id="formBoard" value="" /><br>
+        <input type="text" id="formName" placeholder="Your name" value="" /><br>
+        <input type="text" id="formBoard" placeholder="Board to play on" value="" /><br>
         <input type="radio" id="p1" name="formPlayer" value="p1" checked>Player 1<br>
         <input type="radio" id="p2" name="formPlayer" value="p2" >Player 2<br>
         <button onclick="start();">Start</button>
