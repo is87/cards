@@ -65,6 +65,7 @@
         .bottom{
             height:20vw;
         }
+
         @media only screen and (orientation: landscape) {
             .container{
                 top:10vh;
@@ -142,7 +143,9 @@
                 if (thisId == "") thisId = e.target.parentNode.id;
                 if (thisId == "") thisId = e.target.parentNode.parentNode.id;
                 for (i = 1; i <= 5; i++) {
-                    if (x("c" + i) != null) document.getElementById("c" + i).style.border = "0px solid #000";
+                    if (x("c" + i) != null){
+                        document.getElementById("c" + i).style.border = "0px solid #000";
+                    }
                 }
                 if (selectedCard != thisId) {
                     document.getElementById(thisId).style.border = "5px solid var(--player1)";
