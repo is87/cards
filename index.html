@@ -34,6 +34,7 @@
 
         .grid-item {
             background-color: rgba(255, 255, 255, 0.8);
+            color: #ccc;
             text-align: center;
             width: 15vw;
             height: 15vw;
@@ -43,8 +44,8 @@
         }
 
         .smallCard {
-            background-color: #FFF;
-            color: #333;
+            background-color: #333;
+            color: #ccc;
             width: 15vw;
             height: 15vw;
             display: grid;
@@ -115,7 +116,7 @@
                     if (x("c" + i) != null) document.getElementById("c" + i).style.border = "0px solid #000";
                 }
                 if (selectedCard != thisId) {
-                    document.getElementById(thisId).style.border = "1px solid #000";
+                    document.getElementById(thisId).style.border = "5px solid var(--player1)";
                     selectedCard = thisId;
                     setPlayMode("place");
                 } else {
@@ -158,6 +159,7 @@
         function playCard(position, cardObject, player) {
             console.log("Position: " + position + " - " + JSON.stringify(cardObject));
             x("base" + position).setAttribute("data-inplay", "false");
+            x("base"+position).style.backgroundColor = "#333";
             x("base" + position).innerHTML += "<div style='grid-row:2; grid-column:1;  display:flex;align-items:center;justify-content:flex-start;padding:5px;'><div>" + toPrint(cardObject.west) + "</div></div>";
             x("base" + position).innerHTML += "<div style='grid-row:1; grid-column:2;  display:flex;align-items:flex-start;justify-content:center;padding:5px;'>" + toPrint(cardObject.north) + "</div>";
             x("base" + position).innerHTML += "<div style='grid-row:2; grid-column:3;  display:flex;align-items:center;justify-content:flex-end;padding:5px;'>" + toPrint(cardObject.east) + "</div>";
