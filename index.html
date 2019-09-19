@@ -19,8 +19,8 @@
             grid-template-columns: auto auto auto;
             grid-template-rows: auto auto auto;
             position: fixed;
-            top: 50px;
-            bottom: 120px;
+            top: 10vw;
+            bottom: 20vw;
             right: 0px;
             left: 0px;
             background-color: #ccc;
@@ -36,8 +36,8 @@
             background-color: rgba(255, 255, 255, 0.8);
             color: #ccc;
             text-align: center;
-            width: 15vw;
-            height: 15vw;
+            width: 20vw;
+            height: 20vw;
             display: grid;
             grid-template-columns: auto auto auto;
             grid-template-rows: auto auto auto;
@@ -46,8 +46,8 @@
         .smallCard {
             background-color: #333;
             color: #ccc;
-            width: 15vw;
-            height: 15vw;
+            width: 17vw;
+            height: 17vw;
             display: grid;
             grid-template-columns: auto auto auto;
             grid-template-rows: auto auto auto;
@@ -58,6 +58,35 @@
             display: grid;
             grid-template-columns: auto auto auto;
             grid-template-rows: auto auto auto;
+        }
+        .top{
+            height: 10vw;
+        }
+        .bottom{
+            height:20vw;
+        }
+        @media only screen and (orientation: landscape) {
+            .container{
+                top:10vh;
+                bottom: 20vh;
+            }
+            .smallCard{
+                width: 17vh;
+                height: 17vh;
+            }
+            .grid-item{
+                width:20vh;
+                height:20vh;
+            }
+            html{
+                font-size: 3vh;
+            }
+            .top{
+                height:20vh;
+            }
+            .bottom{
+            height:20vh;
+        }
         }
     </style>
     <script>
@@ -297,14 +326,16 @@
 </head>
 
 <body>
-    <div id="topBar" style="position: fixed; top:0px; height:50px; left: 0px; right:0px; background-color: #333; color: #ccc;"><span id="pName"></span></div>
+    <div id="topBar" class="top" style="position: fixed; top:0px; left: 0px; right:0px; background-color: #333; color: #ccc;"><span id="pName"></span></div>
     <div id="basePlate" class="container"></div>
-    <div id="bottom"
-        style="background-color: #999; height:20vw; position:fixed; bottom: 0px; left: 0px; right:0px; display: grid; grid-template-columns: auto auto auto auto auto; column-gap: 20px; justify-content: center; align-content: center;">
+    <div id="bottom" class="bottom"
+        style="background-color: #999; position:fixed; bottom: 0px; left: 0px; right:0px; display: grid; grid-template-columns: auto auto auto auto auto; column-gap: 20px; justify-content: center; align-content: center;">
     </div>
     <div id="modalStart" style="position: fixed; top:0; bottom:0;left:0;right:0; background-color:rgba(255, 255, 255, 0.3); display: flex;justify-content: center;align-items: center; "><div style="background-color: #333; color: #999; padding: 20px;">
-        Name: <input type="text" id="formName" value="Your name" /><br>
-        Board: <input type="text" id="formBoard" value="Board number" /><br>
+        Welcome to Niner Card Online<br>
+        Let's play a game...<br>
+        Name: <input type="text" id="formName" value="" /><br>
+        Board: <input type="text" id="formBoard" value="" /><br>
         <input type="radio" id="p1" name="formPlayer" value="p1" checked>Player 1<br>
         <input type="radio" id="p2" name="formPlayer" value="p2" >Player 2<br>
         <button onclick="start();">Start</button>
