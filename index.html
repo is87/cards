@@ -145,10 +145,12 @@
                 for (i = 1; i <= 5; i++) {
                     if (x("c" + i) != null){
                         document.getElementById("c" + i).style.border = "0px solid #000";
+                        document.getElementById("c"+i).style.bottom = "0";
                     }
                 }
                 if (selectedCard != thisId) {
                     document.getElementById(thisId).style.border = "5px solid var(--player1)";
+                    document.getElementById(thisId).style.bottom = "5vh";
                     selectedCard = thisId;
                     setPlayMode("place");
                 } else {
