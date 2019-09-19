@@ -61,6 +61,7 @@
     </style>
     <script>
         var playerName = "Player 1";
+        var boardNumber = "";
         var playMode = "select";
         var selectedCard = null;
 
@@ -148,7 +149,7 @@
                 selectedCard = null;
                 playCard(base, cardObject, 1);
                 sendData(cardObject);
-                //setPlayMode("wait");
+                setPlayMode("wait");
 
             }
         }
@@ -208,7 +209,18 @@
 
         function incomingPlay(position, cardObject) {
             playCard(position, cardObject, 2);
-            setPlayMode("select");
+            setMyTurn(true);
+        }
+
+        function setMyTurn(mine){
+            if(mine){
+                setPlayMode("select");
+                x("pName").innerText = playerName + " - Your turn to play";
+            }else{
+                setPlayMode("wait");
+                x("pName").innerText = playerName + " - Waiting for opponent to make a move";
+                setTimeout(listen, 10000);
+            }
         }
 
         function playThis(position, a, b, c, d) {
@@ -218,7 +230,7 @@
             cardObject.east = c;
             cardObject.south = d;
             playCard(position, cardObject, 2);
-            setPlayMode("select");
+            setMyTurn(true);
         }
 
         function setPlayMode(mode) {
@@ -231,6 +243,7 @@
 
         function sendData(cardObject){
             cardObject.player = playerName;
+            cardObject.board = boardNumber;
             $.post("https://isak.pythonanywhere.com/cards/",
                 {
                     action: "write",
@@ -238,7 +251,7 @@
                 },
                 function (data, status) {
                     console.log(data);
-                    setTimeout(listen, 10000);
+                    setMyTurn(false);
                 });
         }
 
@@ -250,7 +263,7 @@
                 function (data, status) {
                     //data = JSON.parse(data);
                     console.log(data);
-                    if(data.player!=playerName){
+                    if(data.player!=playerName && data.board == boardNumber){
                         playThis(data.position, data.west, data.north, data.east, data.south);
                     }else{
                         setTimeout(listen, 10000);
@@ -262,15 +275,37 @@
             playerName = name;
             x("pName").innerText = name;
         }
+
+        function start(){
+            form1 = x("formName").value;
+            form2 = x("formBoard").value;
+            form3 = x("p1").checked;
+            console.log(form1, " - "+ form2+" - "+form3);
+            playerName = form1;
+            boardNumber = form2;
+            if(form3){
+                setMyTurn(true)
+            }else{
+                setMyTurn(false);
+            }
+            x("modalStart").style.display = "none";
+        }
     </script>
 </head>
 
 <body>
-    <div id="topBar" style="position: fixed; top:0px; height:50px; left: 0px; right:0px; background-color: #333; color: #ccc;"><input type="text" value="Set name" onchange="setPlayerName(this.value);" /><span id="pName"></span><button onclick="listen();">Start listening</button></div>
+    <div id="topBar" style="position: fixed; top:0px; height:50px; left: 0px; right:0px; background-color: #333; color: #ccc;"><span id="pName"></span></div>
     <div id="basePlate" class="container"></div>
     <div id="bottom"
         style="background-color: #999; height:20vw; position:fixed; bottom: 0px; left: 0px; right:0px; display: grid; grid-template-columns: auto auto auto auto auto; column-gap: 20px; justify-content: center; align-content: center;">
     </div>
+    <div id="modalStart" style="position: fixed; top:0; bottom:0;left:0;right:0; background-color:rgba(255, 255, 255, 0.3); display: flex;justify-content: center;align-items: center; "><div style="background-color: #333; color: #999; padding: 20px;">
+        Name: <input type="text" id="formName" value="Your name" /><br>
+        Board: <input type="text" id="formBoard" value="Board number" /><br>
+        <input type="radio" id="p1" name="formPlayer" value="p1" checked>Player 1<br>
+        <input type="radio" id="p2" name="formPlayer" value="p2" >Player 2<br>
+        <button onclick="start();">Start</button>
+    </div></div>
 </body>
 
 </html>
