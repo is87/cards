@@ -43,8 +43,8 @@
         }
 
         .smallCard {
-            background-color: #333;
-            color: #ccc;
+            background-color: #FFF;
+            color: #333;
             width: 15vw;
             height: 15vw;
             display: grid;
@@ -108,14 +108,15 @@
 
         function selectCard(e) {
             if (playMode == "select" || playMode == "place") {
-                id = e.target.id;
-                if (id == "") id = e.target.parentNode.id
+                thisId = e.target.id;
+                if (thisId == "") thisId = e.target.parentNode.id;
+                if (thisId == "") thisId = e.target.parentNode.parentNode.id;
                 for (i = 1; i <= 5; i++) {
                     if (x("c" + i) != null) document.getElementById("c" + i).style.border = "0px solid #000";
                 }
-                if (selectedCard != id) {
-                    document.getElementById(id).style.border = "1px solid #000";
-                    selectedCard = id;
+                if (selectedCard != thisId) {
+                    document.getElementById(thisId).style.border = "1px solid #000";
+                    selectedCard = thisId;
                     setPlayMode("place");
                 } else {
                     selectedCard = null;
@@ -169,7 +170,7 @@
             x("base" + position).cardColor = player;
             if (player == 1) colorString = "var(--player1)";
             if (player == 2) colorString = "var(--player2)";
-            x("base" + position).innerHTML += "<div style='grid-row:2; grid-column:2; display:flex;align-items:center;justify-content:center;'><div id='colorCircle' style='border-radius:50%; width: 20px; height: 20px; background-color: " + colorString + ";'></div></div>";
+            x("base" + position).innerHTML += "<div style='grid-row:2; grid-column:2; display:flex;align-items:center;justify-content:center;'><div style='border-radius:50%; width: 20px; height: 20px; background-color: " + colorString + ";'></div></div>";
             checkSurroundings(position);
         }
 
